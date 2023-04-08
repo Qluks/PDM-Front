@@ -13,6 +13,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection: 'column',
     paddingTop: Constants.statusBarHeight,
     backgroundColor: '#15141F',
     padding: 8, 
