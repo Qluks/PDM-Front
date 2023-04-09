@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Image, TextInput, Text, Linking, StyleSheet } from "react-native";
-import Logo from '../assets/Logo.png';
+import Logo from '../../assets/Logo.png';
 
 export default class CenterLogin extends React.Component {
     render() {
