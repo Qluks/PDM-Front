@@ -1,4 +1,4 @@
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, StatusBar } from 'react-native';
 import Constants from 'expo-constants';
 
 import { NavigationContainer } from '@react-navigation/native';
@@ -72,6 +72,7 @@ function HomeTabNavigator() {
 export default function App() {
   return (
     <NavigationContainer>
+      <StatusBar backgroundColor='#15141F' barStyle="light-content" />
       <Stack.Navigator
         initialRouteName="Home"
         screenOptions={{
