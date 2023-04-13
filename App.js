@@ -1,6 +1,5 @@
 import { View, StyleSheet, StatusBar } from 'react-native';
-import Constants from 'expo-constants';
-
+import {Ionicons} from '@expo/vector-icons'
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -9,7 +8,7 @@ import Cadastro from './src/screens/Cadastro';
 import Catalogo from './src/screens/Catálogo';
 import Favoritos from './src/screens/Favoritos';
 import Perfil from './src/screens/Perfil';
-import {Ionicons} from '@expo/vector-icons'
+import EsqueceuEmail from './src/screens/EsqueciSenhaEmail';
 
 
 
@@ -20,7 +19,20 @@ const Tab = createBottomTabNavigator();
 
 function HomeTabNavigator() {
   return (
-    <Tab.Navigator>
+
+    <Tab.Navigator 
+    initialRouteName="Home"
+        screenOptions={{
+          tabBarStyle:{
+            backgroundColor: '#15141F',
+            paddingBottom: 10,
+          },
+          headerTintColor: '#ffffff',
+          headerStyle: {
+            backgroundColor: '#15141F',
+          },
+        }}
+    >
 
       <Tab.Screen 
         name="Home" 
@@ -71,18 +83,11 @@ function HomeTabNavigator() {
 
 export default function App() {
   return (
+    
     <NavigationContainer>
       <StatusBar backgroundColor='#15141F' barStyle="light-content" />
-      <Stack.Navigator
-        initialRouteName="Home"
-        screenOptions={{
-          headerTintColor: '#ffffff',
-          headerStyle: {
-            backgroundColor: '#15141F',
-          },
-        }}
-      >
 
+      <Stack.Navigator>
 
         <Stack.Screen 
           name="Login"
@@ -93,7 +98,18 @@ export default function App() {
         <Stack.Screen 
           name="Cadastro"
           component={Cadastro}
-        />   
+          options={{
+            headerTintColor: '#ffffff',
+            headerStyle: {
+              backgroundColor: '#15141F',
+            },
+          }}
+        /> 
+
+        <Stack.Screen 
+          name="Recuperar"
+          component={EsqueceuEmail}
+        />  
 
         <Stack.Screen 
           name="Catalogo"
@@ -105,6 +121,3 @@ export default function App() {
     </NavigationContainer>
   );
 }
-
-
-

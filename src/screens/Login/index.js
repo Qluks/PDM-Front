@@ -1,6 +1,5 @@
-//Agora
-import React from "react";
-import { View, StyleSheet, Text, Image, TextInput, Linking } from "react-native";
+import React, { useState } from "react";
+import { View, StyleSheet, Text, Image, TextInput, TouchableOpacity } from "react-native";
 import { Button } from '@rneui/themed';
 import Constants from 'expo-constants';
 import { Icon } from 'react-native-elements';
@@ -9,7 +8,12 @@ import Logo from '../../assets/Logo.png';
 
 export default function Login ({navigation}){
 
-    
+    const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+  
+    const togglePasswordVisibility = () => {
+      setShowPassword(!showPassword);
+    };
   
         return(
             <View style={styles.container}>
@@ -31,13 +35,19 @@ export default function Login ({navigation}){
                         placeholder="Email"
                         placeholderTextColor={"#BBBBBB"}
                     />
-                    <TextInput 
+                    <TextInput
                         style={styles.inputForm}
-                        secureTextEntry={true}
                         placeholder="Senha"
-                        placeholderTextColor={"#BBBBBB"}
+                        secureTextEntry={!showPassword}
+                        value={password}
+                        onChangeText={(text) => setPassword(text)}
                     />
-                    <Text style={styles.text} onPress={() => { Linking.openURL('https://reactnative.dev'); }} >Esqueceu a senha?</Text>
+                    <TouchableOpacity onPress={togglePasswordVisibility}>
+                        <Text style={showPassword ? styles.hideText : styles.showText}>
+                            {showPassword ? 'Ocultar senha' : 'Mostrar senha'}
+                        </Text>
+                    </TouchableOpacity>
+                    <Text style={styles.text} onPress={() => navigation.navigate("Recuperar")} >Esqueceu a senha?</Text>
                 </View>
 
                 <View style={styles.container3}>
@@ -130,5 +140,13 @@ const styles = StyleSheet.create({
         color: '#FFFFFF',
         marginLeft: 65,
         marginTop: 33,
-    }
+    }, 
+     hideText: {
+        marginLeft:30,
+        color: 'white',
+      },
+      showText: {
+        marginLeft:30,
+        color: 'green',
+      },
   });
