@@ -9,6 +9,7 @@ import Catalogo from './src/screens/Catálogo';
 import Favoritos from './src/screens/Favoritos';
 import Perfil from './src/screens/Perfil';
 import EsqueceuEmail from './src/screens/EsqueciSenhaEmail';
+import EsqueceuSenha from './src/screens/EsqueciSenhaSenha';
 
 
 
@@ -107,9 +108,26 @@ export default function App() {
         /> 
 
         <Stack.Screen 
-          name="Recuperar"
+          name="Esqueceu a Senha"
           component={EsqueceuEmail}
+          options={{
+            headerTintColor: '#ffffff',
+            headerStyle: {
+              backgroundColor: '#15141F',
+            },
+          }}
         />  
+
+        <Stack.Screen 
+          name="Recuperar Senha"
+          component={EsqueceuSenha}
+          options={{
+            headerTintColor: '#ffffff',
+            headerStyle: {
+              backgroundColor: '#15141F',
+            },
+          }}
+        /> 
 
         <Stack.Screen 
           name="Catalogo"

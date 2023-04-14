@@ -47,7 +47,7 @@ export default function Login ({navigation}){
                             {showPassword ? 'Ocultar senha' : 'Mostrar senha'}
                         </Text>
                     </TouchableOpacity>
-                    <Text style={styles.text} onPress={() => navigation.navigate("Recuperar")} >Esqueceu a senha?</Text>
+                    <Text style={styles.text} onPress={() => navigation.navigate("Esqueceu a Senha")} >Esqueceu a senha?</Text>
                 </View>
 
                 <View style={styles.container3}>
@@ -84,7 +84,8 @@ const styles = StyleSheet.create({
         paddingTop: Constants.statusBarHeight,
         backgroundColor: '#15141F',
         padding: 8, 
-    },container1: {
+    },
+    container1: {
         flexDirection: 'column',
     },
     viewUp: {
