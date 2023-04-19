@@ -1,22 +1,36 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Text, Image, TextInput, TouchableOpacity } from "react-native";
+import { View, StyleSheet, Text, Image, TextInput, ScrollView } from "react-native";
+import { useForm, Controller } from "react-hook-form";
+import {yupResolver} from "@hookform/resolvers/yup";
+import * as yup from 'yup';
 import { Button } from '@rneui/themed';
 import Constants from 'expo-constants';
 import { Icon } from 'react-native-elements';
 import Logo from '../../assets/Logo.png';
 
 
+const schema = yup.object({
+    email: yup.string().required("Informe seu email!").matches(/^\S+@\S+$/i, 'Email inválido!'),
+    senha: yup.string().required("Informe sua senha!").min(6, "A senha tem que ter pelo menos 6 dígitos!"),
+})
+
 export default function Login ({navigation}){
 
-    const [password, setPassword] = useState('');
-    const [showPassword, setShowPassword] = useState(false);
-  
-    const togglePasswordVisibility = () => {
-      setShowPassword(!showPassword);
-    };
+    const { control, handleSubmit, formState: { errors } } = useForm({
+        resolver: yupResolver(schema)
+      });
+
+      const onSubmit = (data) => {
+        console.log(data);
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'Catalogo' }],
+        });
+      };
   
         return(
             <View style={styles.container}>
+            <ScrollView>
 
                 <View style={styles.container1}>
                     <View style={styles.viewUp}>
@@ -27,35 +41,64 @@ export default function Login ({navigation}){
                         <Text style={styles.textBemVindo}>Bem Vindo!</Text>
                     </View>
                 </View>
+
+
             
                 <View style={styles.container2}>
                     <Image style={styles.logo} source={Logo} />
-                    <TextInput 
-                        style={styles.inputForm}
-                        placeholder="Email"
-                        placeholderTextColor={"#BBBBBB"}
+
+
+                   
+                    <Controller
+                        control={control}
+                        name="email"
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <TextInput 
+                                style={[
+                                    styles.inputForm,
+                                    errors.email && { borderColor: "#ff0000",borderWidth: 2  },
+                                ]}
+                                placeholder="Email"
+                                placeholderTextColor={"#BBBBBB"}
+                                onBlur={onBlur}
+                                onChangeText={onChange}
+                                value={value}
+                            />
+                            )}
                     />
-                    <TextInput
-                        style={styles.inputForm}
-                        placeholder="Senha"
-                        secureTextEntry={!showPassword}
-                        value={password}
-                        onChangeText={(text) => setPassword(text)}
+                    {errors.email && <Text style={{ color: '#ff0000', marginLeft: 45 }}>{errors.email?.message}</Text>}
+
+
+                    
+                    <Controller
+                        control={control}
+                        name="senha"
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <TextInput 
+                                style={[
+                                    styles.inputForm,
+                                    errors.senha && { borderColor: "#ff0000",borderWidth: 2  },
+                                ]}
+                                placeholder="Senha"
+                                secureTextEntry={true}
+                                onBlur={onBlur}
+                                onChangeText={onChange}
+                                value={value}
+                            />
+                            )}
                     />
-                    <TouchableOpacity onPress={togglePasswordVisibility}>
-                        <Text style={showPassword ? styles.hideText : styles.showText}>
-                            {showPassword ? 'Ocultar senha' : 'Mostrar senha'}
-                        </Text>
-                    </TouchableOpacity>
+                    {errors.senha && <Text style={{ color: '#ff0000', marginLeft: 45 }}>{errors.senha?.message}</Text>}
+                
+
                     <Text style={styles.text} onPress={() => navigation.navigate("Esqueceu a Senha")} >Esqueceu a senha?</Text>
                 </View>
 
+
+                
+
                 <View style={styles.container3}>
                     <Button
-                        onPress={() => navigation.reset({
-                            index:0,
-                            routes: [{name: 'Catalogo'}]
-                        })}
+                        onPress={handleSubmit(onSubmit)}
                         title="Login"
                         buttonStyle={{
                             backgroundColor: '#190152',
@@ -71,7 +114,7 @@ export default function Login ({navigation}){
                     />
                     <Text style={styles.cadastro} onPress={() => navigation.navigate('Cadastro')} >Ainda não é cadastrado? Crie uma conta</Text>
                 </View>
-
+            </ScrollView>
             </View>
         )
     }
@@ -124,13 +167,16 @@ const styles = StyleSheet.create({
         width: 339,
         backgroundColor: '#ddddff',
         marginLeft: 24,
-        marginBottom: 18,
+        marginBottom: 3,
+        marginTop:25,
         borderRadius: 20,
         paddingLeft: 21,
+        
     },
     text: {
         color: '#4285F4',
         marginLeft: 242,
+        marginTop: 20,
         marginBottom: 36,
     },   
      container3: {
@@ -142,12 +188,4 @@ const styles = StyleSheet.create({
         marginLeft: 65,
         marginTop: 33,
     }, 
-     hideText: {
-        marginLeft:30,
-        color: 'white',
-      },
-      showText: {
-        marginLeft:30,
-        color: 'green',
-      },
   });
