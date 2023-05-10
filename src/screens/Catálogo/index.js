@@ -1,18 +1,32 @@
-import React from "react";
-import { View,  Text } from "react-native";
-import Constants from 'expo-constants';
+import React from 'react';
+import { View, Text, FlatList, Image } from 'react-native';
+import { useDados } from '../../../api/dados';
 
+const DadosScreen = () => {
+  const { dados, isLoading, isError } = useDados();
 
-export default function Catalogo ({navigation}){
+  if (isLoading) {
+    return <Text>Carregando...</Text>;
+  }
 
-    
-  
-    return(
-        <View >
-            <Text>Catalogo</Text>
+  if (isError) {
+    return <Text>Ocorreu um erro ao carregar os dados</Text>;
+  }
 
-        </View>
-    )
-}
+  return (
+    <View>
+      <FlatList
+        data={dados}
+        keyExtractor={(item) => item.objectId}
+        renderItem={({ item }) => (
+          <View>
+            <Image source={{ uri: item.foto.url }} style={{ width: 300, height: 200 }}/>
+            <Text>{item.titulo}</Text>
+          </View>
+        )}
+      />
+    </View>
+  );
+};
 
-
+export default DadosScreen;
