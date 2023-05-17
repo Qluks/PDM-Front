@@ -10,6 +10,7 @@ import Favoritos from './src/screens/Favoritos';
 import Perfil from './src/screens/Perfil';
 import EsqueceuEmail from './src/screens/EsqueciSenhaEmail';
 import EsqueceuSenha from './src/screens/EsqueciSenhaSenha';
+import Detalhamento from './src/screens/Detalhamento';
 
 
 
@@ -133,6 +134,12 @@ export default function App() {
           name="Catalogo"
           component={HomeTabNavigator}
           options={{ headerShown: false }}
+        />
+
+        <Stack.Screen 
+          name="Detalhes"
+          component={Detalhamento}
+          options={({ route }) => ({ headerTitle: route.params.item.titulo })}
         />
 
       </Stack.Navigator>
