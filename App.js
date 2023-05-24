@@ -11,6 +11,7 @@ import Perfil from './src/screens/Perfil';
 import EsqueceuEmail from './src/screens/EsqueciSenhaEmail';
 import EsqueceuSenha from './src/screens/EsqueciSenhaSenha';
 import Detalhamento from './src/screens/Detalhamento';
+import Noticia from './src/screens/noticia';
 
 
 
@@ -63,6 +64,20 @@ function HomeTabNavigator() {
           }
         }}
       />
+
+      <Tab.Screen 
+            name="Noticia" 
+            component={Noticia}
+            options={{
+              tabBarIcon:({color, size, focused}) =>{
+                if(focused){
+                  return <Ionicons name="newspaper" size={size} color={color} />
+                }
+
+                return <Ionicons name="newspaper-outline" size={size} color={color} />
+              }
+            }}
+        />
 
       <Tab.Screen 
         name="Perfil" 

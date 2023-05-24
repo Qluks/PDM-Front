@@ -1,10 +1,12 @@
 import React from "react";
-import { View,  Text, StyleSheet, TextInput, ScrollView } from "react-native";
-import{ Button } from '@rneui/themed';
+import { View,  Text, StyleSheet, ScrollView } from "react-native";
+import{ Button, Input } from '@rneui/themed';
 import Constants from 'expo-constants';
 import { useForm, Controller } from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
 import * as yup from 'yup';
+import useStore from "../../../assets/themeStore";
+
 
 const schema = yup.object({
     nome: yup.string().required("Informe seu nome!"),
@@ -32,21 +34,24 @@ export default function Cadastro ({navigation}){
         });
     };
 
+    const { theme } = useStore();
+
     return(
-        <View style={styles.container}>
+        <View style={styles[theme].container}>
         <ScrollView>  
 
-            <View style={styles.form}>
+            <View style={styles[theme].form}>
 
             
-                <Text style={styles.texto}>NOME</Text>
+                <Text style={styles[theme].texto}>NOME</Text>
+                {errors.nome && <Text style={{ color: '#ff0000', marginLeft: 41, marginBottom:30 }}>{errors.nome?.message}</Text>}
                 <Controller
                     control={control}
                     name="nome"
                     render={({ field: { onChange, onBlur, value } }) => (
-                        <TextInput
+                        <Input
                             style={[
-                                styles.inputForm,
+                                styles[theme].inputForm,
                                 errors.nome && { borderColor: "#ff0000",borderWidth: 2  },
                             ]}
                             placeholder="Nome"
@@ -57,18 +62,18 @@ export default function Cadastro ({navigation}){
                         />
                     )}
                 />
-                {errors.nome && <Text style={{ color: '#ff0000', marginLeft: 45, marginBottom:30 }}>{errors.nome?.message}</Text>}
+                
 
 
-
-                <Text style={styles.texto}>SEXO</Text>
+                <Text style={styles[theme].texto}>SEXO</Text>
+                {errors.sexo && <Text style={{ color: '#ff0000', marginLeft: 41 , marginBottom:30}}>{errors.sexo?.message}</Text>}
                 <Controller
                     control={control}
                     name="sexo"
                     render={({ field: { onChange, onBlur, value } }) => (
-                        <TextInput
+                        <Input
                             style={[
-                                styles.inputForm,
+                                styles[theme].inputForm,
                                 errors.sexo && { borderColor: "#ff0000",borderWidth: 2  },
                             ]}
                             placeholder="sexo"
@@ -78,18 +83,19 @@ export default function Cadastro ({navigation}){
                         />
                     )}
                 />
-                {errors.sexo && <Text style={{ color: '#ff0000', marginLeft: 45 , marginBottom:30}}>{errors.sexo?.message}</Text>}
+                
 
 
 
-                <Text style={styles.texto}>APELIDO</Text>
+                <Text style={styles[theme].texto}>APELIDO</Text>
+                {errors.apelido && <Text style={{ color: '#ff0000', marginLeft: 41 , marginBottom:30}}>{errors.apelido?.message}</Text>}
                 <Controller
                     control={control}
                     name="apelido"
                     render={({ field: { onChange, onBlur, value } }) => (
-                        <TextInput
+                        <Input
                             style={[
-                                styles.inputForm,
+                                styles[theme].inputForm,
                                 errors.apelido && { borderColor: "#ff0000",borderWidth: 2   },
                             ]}
                             placeholder="Apelido"
@@ -99,18 +105,19 @@ export default function Cadastro ({navigation}){
                         />
                     )}
                 />
-                {errors.apelido && <Text style={{ color: '#ff0000', marginLeft: 45 , marginBottom:30}}>{errors.apelido?.message}</Text>}
+                
 
 
 
-                <Text style={styles.texto}>EMAIL</Text>
+                <Text style={styles[theme].texto}>EMAIL</Text>
+                {errors.email && <Text style={{ color: '#ff0000', marginLeft: 41, marginBottom:30 }}>{errors.email?.message}</Text>}
                 <Controller
                     control={control}
                     name="email"
                     render={({ field: { onChange, onBlur, value } }) => (
-                        <TextInput
+                        <Input
                             style={[
-                                styles.inputForm,
+                                styles[theme].inputForm,
                                 errors.email && { borderColor: "#ff0000",borderWidth: 2  },
                             ]}
                             placeholder="Email"
@@ -120,20 +127,21 @@ export default function Cadastro ({navigation}){
                         />
                     )}
                 />
-                {errors.email && <Text style={{ color: '#ff0000', marginLeft: 45, marginBottom:30 }}>{errors.email?.message}</Text>}
+                
 
 
 
 
 
-                <Text style={styles.texto}>SENHA</Text>
+                <Text style={styles[theme].texto}>SENHA</Text>
+                {errors.senha && <Text style={{ color: '#ff0000', marginLeft: 41, marginBottom:30 }}>{errors.senha?.message}</Text>}
                 <Controller
                     control={control}
                     name="senha"
                     render={({ field: { onChange, onBlur, value } }) => (
-                    <TextInput
+                    <Input
                         style={[
-                            styles.inputForm,
+                            styles[theme].inputForm,
                             errors.senha && { borderColor: "#ff0000",borderWidth: 2  },
                         ]}
                         placeholder="Senha"
@@ -144,18 +152,19 @@ export default function Cadastro ({navigation}){
                     />
                     )}
                 />
-                {errors.senha && <Text style={{ color: '#ff0000', marginLeft: 45, marginBottom:30 }}>{errors.senha?.message}</Text>}
+                
 
 
 
-                <Text style={styles.texto}>REPETIR SENHA</Text>
+                <Text style={styles[theme].texto}>REPETIR SENHA</Text>
+                {errors.repetirSenha && <Text style={{ color: '#ff0000', marginLeft: 41, marginBottom:30 }}>{errors.repetirSenha?.message}</Text>}
                 <Controller
                     control={control}
                     name="repetirSenha"
                     render={({ field: { onChange, onBlur, value } }) => (
-                        <TextInput 
+                        <Input 
                             style={[
-                                styles.inputForm,
+                                styles[theme].inputForm,
                                 errors.repetirSenha && { borderColor: "#ff0000",borderWidth: 2  },
                             ]}
                             placeholder="Repetir Senha"
@@ -166,7 +175,7 @@ export default function Cadastro ({navigation}){
                         />
                     )}
                 />
-                {errors.repetirSenha && <Text style={{ color: '#ff0000', marginLeft: 45, marginBottom:30 }}>{errors.repetirSenha?.message}</Text>}
+                
 
                 <Button
                     onPress={handleSubmit(onSubmit)}
@@ -181,6 +190,7 @@ export default function Cadastro ({navigation}){
                         marginLeft: 24,
                         marginTop: 24,
                         fontSize: 18,   
+                        marginBottom: 30,
                     }}
                     titleStyle={{ color: 'white', fontSize:18, paddingVertical: 5}}
                 />
@@ -193,6 +203,7 @@ export default function Cadastro ({navigation}){
 
 
 const styles = StyleSheet.create({
+    dark:{
     container:{
         flex: 1,
         backgroundColor: '#15141F',
@@ -201,7 +212,6 @@ const styles = StyleSheet.create({
         height: 48,
         width: 339,
         backgroundColor: '#ddddff',
-        marginLeft: 24,
         marginBottom: 25,
         borderRadius: 20,
         paddingLeft: 21,
@@ -213,5 +223,28 @@ const styles = StyleSheet.create({
         color: '#ffffff',
         marginLeft:40,
         marginBottom:15,
-    }
+    },
+},
+light:{
+    container:{
+        flex: 1,
+        backgroundColor: '#ffffff',
+    },
+    inputForm:{
+        height: 48,
+        width: 339,
+        backgroundColor: '#ddddff',
+        marginBottom: 25,
+        borderRadius: 20,
+        paddingLeft: 21,
+    },
+    form:{
+        marginTop:20,
+    },
+    texto:{
+        color: '#15141F',
+        marginLeft:40,
+        marginBottom:15,
+    },
+}
 })

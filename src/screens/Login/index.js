@@ -3,7 +3,7 @@ import { View, StyleSheet, Text, Image, TextInput, ScrollView } from "react-nati
 import { useForm, Controller } from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
 import * as yup from 'yup';
-import { Button } from '@rneui/themed';
+import { Button,Input } from '@rneui/themed';
 import Constants from 'expo-constants';
 import { Icon } from 'react-native-elements';
 import Logo from '../../assets/Logo.png';
@@ -29,6 +29,8 @@ export default function Login ({navigation}){
         setTheme(newTheme); // Altere o tema no estado
       };
 
+      const buttonText = theme === 'light' ? 'dark' : 'light';
+
       const onSubmit = (data) => {
         console.log(data);
         navigation.reset({
@@ -38,10 +40,12 @@ export default function Login ({navigation}){
       };
   
         return(
+
             <View style={styles[theme].container}>
             <ScrollView>
 
                 <View style={styles[theme].container1}>
+                <Button style={styles[theme].modo} title={buttonText} onPress={toggleTheme} />
                     <View style={styles[theme].viewUp}>
                         <Text style={styles[theme].textLogin}>Login</Text>
                         <Icon name='person' color='#FFFFFF' style={styles[theme].icon}/>
@@ -56,15 +60,14 @@ export default function Login ({navigation}){
                 <View style={styles[theme].container2}>
                     <Image style={styles[theme].logo} source={Logo} />
 
-                    <Button title="Toggle Theme" onPress={toggleTheme} />
 
 
-                   
+                   {errors.email && <Text style={{ color: '#ff0000', marginLeft: 45 }}>{errors.email?.message}</Text>}
                     <Controller
                         control={control}
                         name="email"
                         render={({ field: { onChange, onBlur, value } }) => (
-                            <TextInput 
+                            <Input 
                                 style={[
                                     styles[theme].inputForm,
                                     errors.email && { borderColor: "#ff0000",borderWidth: 2  },
@@ -77,15 +80,15 @@ export default function Login ({navigation}){
                             />
                             )}
                     />
-                    {errors.email && <Text style={{ color: '#ff0000', marginLeft: 45 }}>{errors.email?.message}</Text>}
-
-
                     
+
+
+                    {errors.senha && <Text style={{ color: '#ff0000', marginLeft: 45 }}>{errors.senha?.message}</Text>}
                     <Controller
                         control={control}
                         name="senha"
                         render={({ field: { onChange, onBlur, value } }) => (
-                            <TextInput 
+                            <Input 
                                 style={[
                                     styles[theme].inputForm,
                                     errors.senha && { borderColor: "#ff0000",borderWidth: 2  },
@@ -98,7 +101,7 @@ export default function Login ({navigation}){
                             />
                             )}
                     />
-                    {errors.senha && <Text style={{ color: '#ff0000', marginLeft: 45 }}>{errors.senha?.message}</Text>}
+                    
                 
 
                     <Text style={styles[theme].text} onPress={() => navigation.navigate("Esqueceu a Senha")} >Esqueceu a senha?</Text>
@@ -178,7 +181,6 @@ const styles = StyleSheet.create({
         height: 48,
         width: 339,
         backgroundColor: '#ddddff',
-        marginLeft: 24,
         marginBottom: 3,
         marginTop:25,
         borderRadius: 20,
@@ -198,6 +200,7 @@ const styles = StyleSheet.create({
         color: '#FFFFFF',
         marginLeft: 65,
         marginTop: 33,
+        marginBottom: 30,
     }, 
   },
   light:{
@@ -246,7 +249,6 @@ const styles = StyleSheet.create({
         height: 48,
         width: 339,
         backgroundColor: '#ddddff',
-        marginLeft: 24,
         marginBottom: 3,
         marginTop:25,
         borderRadius: 20,
@@ -267,6 +269,7 @@ const styles = StyleSheet.create({
         color: '#15141F',
         marginLeft: 65,
         marginTop: 33,
+        marginBottom: 30,
     }, 
   }
 });
