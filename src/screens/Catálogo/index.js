@@ -1,19 +1,20 @@
 import React from 'react';
 import { View, Text, FlatList, Image, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { useDados } from '../../../api/dados';
+import { useDadosCatalogoGet} from '../../../api/api';
 import useStore from "../../../assets/themeStore";
 
+
 const DadosScreen = () => {
-  const { dados, isLoading, isError } = useDados();
+  const { dadosCatalogo, isLoadingCatalogo, isErrorCatalogo } = useDadosCatalogoGet();
   const navigation = useNavigation();
   const { theme } = useStore();
 
-  if (isLoading) {
+  if (isLoadingCatalogo) {
     return <Text>Carregando...</Text>;
   }
 
-  if (isError) {
+  if (isErrorCatalogo) {
     return <Text>Ocorreu um erro ao carregar os dados</Text>;
   }
 
@@ -24,7 +25,7 @@ const DadosScreen = () => {
   return (
     <View style={styles[theme].container}>
       <FlatList
-        data={dados}
+        data={dadosCatalogo}
         keyExtractor={(item) => item.objectId}
         numColumns={2}
         renderItem={({ item }) => (

@@ -11,7 +11,7 @@ import Perfil from './src/screens/Perfil';
 import EsqueceuEmail from './src/screens/EsqueciSenhaEmail';
 import EsqueceuSenha from './src/screens/EsqueciSenhaSenha';
 import Detalhamento from './src/screens/Detalhamento';
-import Noticia from './src/screens/noticia';
+import Noticia from './src/screens/Noticia';
 
 
 

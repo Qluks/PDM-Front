@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, Image, StyleSheet,ScrollView } from 'react-native';
 import useStore from "../../../assets/themeStore";
+import axios from 'axios';
+import { Button } from 'react-native-elements';
 
 
 const Detalhamento = ({ route }) => {
   const { item } = route.params;
+  const [isFavorito, setIsFavorito] = useState(false);
+  const { theme } = useStore();
 
   const getBoxColor = (idade) => {
     switch (idade) {
@@ -25,7 +29,26 @@ const Detalhamento = ({ route }) => {
     }
   };
 
-  const { theme } = useStore();
+  const handleFavoritar = async () => {
+    try {
+      const data = {
+        titulo: item.titulo,
+        idade: item.idade,
+        object_id: item.object_id,
+        foto_url: item.foto,
+        descricao: item.descricao,
+        created_at: item.created_at,
+        updated_at: item.updated_at,
+        generos: item.generos
+      };
+  
+      await axios.post('https://aos-backend-production-0e13.up.railway.app/anime', data); // Substitua 'URL_DA_ROTA' pela URL da sua rota de destino
+      setIsFavorito(true); // Atualiza o estado para indicar que o item está favoritado
+      console.log('Item favoritado com sucesso!');
+    } catch (error) {
+      console.log('Erro ao favoritar o item:', error);
+    }
+  };
 
   return (
     <View style={styles[theme].container}>
@@ -43,6 +66,8 @@ const Detalhamento = ({ route }) => {
         ))}
       </View>
       <Text style={styles[theme].text}>{item.descricao}</Text>
+
+      <Button onPress={handleFavoritar}/>
       </ScrollView>
     </View>
   );

@@ -1,30 +1,113 @@
-//Agora
-import React from "react";
-import { View, StyleSheet, Text, Image, TextInput, Linking } from "react-native";
-import { Button } from '@rneui/themed';
-import Constants from 'expo-constants';
-import { Icon } from 'react-native-elements';
-import Logo from '../../assets/Logo.png';
+import React from 'react';
+import { View, Text, FlatList, Image, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { useDadosNoticeGet } from '../../../api/api';
+import useStore from '../../../assets/themeStore';
 
+const DadosScreen = () => {
+  const { dadosNotice, isLoadingNotice, isErrorNotice } = useDadosNoticeGet();
+  const navigation = useNavigation();
+  const { theme } = useStore();
 
-export default function Noticia ({navigation}){
+  if (isLoadingNotice) {
+    return <Text>Carregando...</Text>;
+  }
 
-    
-  
-        return(
-            <View style={styles.container}>
-                <Text>noticia</Text>
+  if (isErrorNotice) {
+    return <Text>Ocorreu um erro ao carregar os dados</Text>;
+  }
 
-            </View>
-        )
-    }
-
+  return (
+    <View style={styles[theme].Container}>
+      <FlatList
+        data={dadosNotice}
+        keyExtractor={(item) => item.objectId}
+        renderItem={({ item }) => (
+          <View style={styles[theme].itemContainer}>
+          
+            <Text style={styles[theme].itemTextTema}>{item.tema}</Text>
+            <Image source={{ uri: item.imagem.url }} style={styles[theme].itemImage} />
+            <Text style={styles[theme].itemText}>{item.noticia}</Text>
+            <View style={styles[theme].horizontalLine} />
+          </View>
+        )}
+      />
+    </View>
+  ); 
+};
 
 const styles = StyleSheet.create({
-    container: {
-        flex:1,
-        flexDirection: 'column',
-        paddingTop: Constants.statusBarHeight,
-        backgroundColor: 'white',
-        padding: 8, 
-    }});
+  dark:{
+  Container:{
+    flex: 1,
+    backgroundColor: '#15141F'
+  },
+  itemContainer: {
+    marginBottom: 10, 
+  },
+  itemImage: {
+    width: 400, 
+    height: 200, 
+  },
+  itemText: {
+    fontSize: 15,
+    color: '#ffffff',
+    marginLeft: 10,
+    marginRight: 10,
+    textAlign: 'justify',
+    marginTop: 15,
+    marginBottom: 30,
+  },
+  itemTextTema:{
+    fontSize: 25,
+    color: '#ffffff',
+    marginLeft: 10,
+    marginRight: 10,
+    textAlign: 'justify',
+  },
+  horizontalLine: {
+    borderBottomColor: '#ffffff',
+    borderBottomWidth: 1,
+    marginHorizontal: 10,
+  },
+},
+  light:{
+    Container:{
+      flex: 1,
+      backgroundColor: '#ffffff'
+    },
+    itemContainer: {
+      marginBottom: 10, 
+    },
+    itemImage: {
+      width: 400, 
+      height: 200, 
+    },
+    itemText: {
+      fontSize: 15,
+      color: '#15141F',
+      marginLeft: 10,
+      marginRight: 10,
+      textAlign: 'justify',
+      marginTop: 15,
+      marginBottom: 30,
+    },
+    itemTextTema:{
+      fontSize: 25,
+      color: '#15141F',
+      marginLeft: 10,
+      marginRight: 10,
+      textAlign: 'justify',
+    },
+    horizontalLine: {
+      borderBottomColor: '#15141F',
+      borderBottomWidth: 1,
+      marginHorizontal: 10,
+    },
+  },
+  });
+
+
+
+
+export default DadosScreen;

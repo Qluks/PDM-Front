@@ -1,137 +1,141 @@
-import React, { useState } from "react";
-import { View, StyleSheet, Text, Image, TextInput, ScrollView } from "react-native";
+import React from "react";
+import { View, StyleSheet, Text, Image, ScrollView } from "react-native";
 import { useForm, Controller } from "react-hook-form";
-import {yupResolver} from "@hookform/resolvers/yup";
-import * as yup from 'yup';
-import { Button,Input } from '@rneui/themed';
-import Constants from 'expo-constants';
-import { Icon } from 'react-native-elements';
-import Logo from '../../assets/Logo.png';
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { Button, Input } from "@rneui/themed";
+import Constants from "expo-constants";
+import { Icon } from "react-native-elements";
+import Logo from "../../assets/Logo.png";
 import themeStore from "../../../assets/themeStore";
-
-
+import create from "zustand";
 
 const schema = yup.object({
-    email: yup.string().required("Informe seu email!").matches(/^\S+@\S+$/i, 'Email inválido!'),
-    senha: yup.string().required("Informe sua senha!").min(6, "A senha tem que ter pelo menos 6 dígitos!"),
-})
+  email: yup
+    .string()
+    .required("Informe seu email!")
+    .matches(/^\S+@\S+$/i, "Email inválido!"),
+  senha: yup
+    .string()
+    .required("Informe sua senha!")
+    .min(6, "A senha tem que ter pelo menos 6 dígitos!"),
+});
 
-export default function Login ({navigation}){
+export const useStore = create((set) => ({
+  email: "", 
+  setEmail: (value) => set((state) => ({ email: value })), 
+}));
 
-    const { control, handleSubmit, formState: { errors } } = useForm({
-        resolver: yupResolver(schema)
-      });
+export default function Login({ navigation }) {
+  const { control, handleSubmit, formState: { errors } } = useForm({
+    resolver: yupResolver(schema),
+  });
 
-      const { theme, setTheme } = themeStore();
+  const { theme, setTheme } = themeStore();
 
-      const toggleTheme = () => {
-        const newTheme = theme === 'light' ? 'dark' : 'light';
-        setTheme(newTheme); // Altere o tema no estado
-      };
+  const toggleTheme = () => {
+    const newTheme = theme === "light" ? "dark" : "light";
+    setTheme(newTheme); // Altere o tema no estado
+  };
 
-      const buttonText = theme === 'light' ? 'dark' : 'light';
+  const buttonText = theme === "light" ? "dark" : "light";
 
-      const onSubmit = (data) => {
-        console.log(data);
-        navigation.reset({
-          index: 0,
-          routes: [{ name: 'Catalogo' }],
-        });
-      };
-  
-        return(
+  const onSubmit = (data) => {
+    console.log(data);
+    useStore.setState({ email: data.email }); // Armazena o email no store
+    navigation.reset({
+      index: 0,
+      routes: [{ name: "Catalogo" }],
+    });
+  };
 
-            <View style={styles[theme].container}>
-            <ScrollView>
+  return (
+    <View style={styles[theme].container}>
+      <ScrollView>
+        <View style={styles[theme].container1}>
+          <Button style={styles[theme].modo} title={buttonText} onPress={toggleTheme} />
+          <View style={styles[theme].viewUp}>
+            <Text style={styles[theme].textLogin}>Login</Text>
+            <Icon name="person" color="#FFFFFF" style={styles[theme].icon} />
+          </View>
+          <View>
+            <Text style={styles[theme].textBemVindo}>Bem Vindo!</Text>
+          </View>
+        </View>
 
-                <View style={styles[theme].container1}>
-                <Button style={styles[theme].modo} title={buttonText} onPress={toggleTheme} />
-                    <View style={styles[theme].viewUp}>
-                        <Text style={styles[theme].textLogin}>Login</Text>
-                        <Icon name='person' color='#FFFFFF' style={styles[theme].icon}/>
-                    </View>
-                    <View>
-                        <Text style={styles[theme].textBemVindo}>Bem Vindo!</Text>
-                    </View>
-                </View>
+        <View style={styles[theme].container2}>
+          <Image style={styles[theme].logo} source={Logo} />
 
+          {errors.email && <Text style={{ color: "#ff0000", marginLeft: 45 }}>{errors.email?.message}</Text>}
+          <Controller
+            control={control}
+            name="email"
+            render={({ field: { onChange, onBlur, value } }) => (
+              <Input
+                style={[
+                  styles[theme].inputForm,
+                  errors.email && { borderColor: "#ff0000", borderWidth: 2 },
+                ]}
+                placeholder="Email"
+                placeholderTextColor="#BBBBBB"
+                onBlur={onBlur}
+                onChangeText={(text) => {
+                  useStore.setState({ email: text }); // Atualiza o email no store
+                  onChange(text);
+                }}
+                value={useStore((state) => state.email)} // Usa o valor do store para o campo de entrada
+              />
+            )}
+          />
 
-            
-                <View style={styles[theme].container2}>
-                    <Image style={styles[theme].logo} source={Logo} />
+          {errors.senha && <Text style={{ color: "#ff0000", marginLeft: 45 }}>{errors.senha?.message}</Text>}
+          <Controller
+            control={control}
+            name="senha"
+            render={({ field: { onChange, onBlur, value } }) => (
+              <Input
+                style={[
+                  styles[theme].inputForm,
+                  errors.senha && { borderColor: "#ff0000", borderWidth: 2 },
+                ]}
+                placeholder="Senha"
+                secureTextEntry={true}
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+              />
+            )}
+          />
 
+          <Text style={styles[theme].text} onPress={() => navigation.navigate("Esqueceu a Senha")}>
+            Esqueceu a senha?
+          </Text>
+        </View>
 
-
-                   {errors.email && <Text style={{ color: '#ff0000', marginLeft: 45 }}>{errors.email?.message}</Text>}
-                    <Controller
-                        control={control}
-                        name="email"
-                        render={({ field: { onChange, onBlur, value } }) => (
-                            <Input 
-                                style={[
-                                    styles[theme].inputForm,
-                                    errors.email && { borderColor: "#ff0000",borderWidth: 2  },
-                                ]}
-                                placeholder="Email"
-                                placeholderTextColor={"#BBBBBB"}
-                                onBlur={onBlur}
-                                onChangeText={onChange}
-                                value={value}
-                            />
-                            )}
-                    />
-                    
-
-
-                    {errors.senha && <Text style={{ color: '#ff0000', marginLeft: 45 }}>{errors.senha?.message}</Text>}
-                    <Controller
-                        control={control}
-                        name="senha"
-                        render={({ field: { onChange, onBlur, value } }) => (
-                            <Input 
-                                style={[
-                                    styles[theme].inputForm,
-                                    errors.senha && { borderColor: "#ff0000",borderWidth: 2  },
-                                ]}
-                                placeholder="Senha"
-                                secureTextEntry={true}
-                                onBlur={onBlur}
-                                onChangeText={onChange}
-                                value={value}
-                            />
-                            )}
-                    />
-                    
-                
-
-                    <Text style={styles[theme].text} onPress={() => navigation.navigate("Esqueceu a Senha")} >Esqueceu a senha?</Text>
-                </View>
-
-
-                
-
-                <View style={styles[theme].container3}>
-                    <Button
-                        onPress={handleSubmit(onSubmit)}
-                        title="Login"
-                        buttonStyle={{
-                            backgroundColor: '#190152',
-                            borderRadius: 12,
-                        }}      
-                        containerStyle={{
-                            width: 339,
-                            height: 55,
-                            marginLeft: 24,
-                            fontSize: 18,   
-                        }}
-                        titleStyle={{ color: 'white', fontSize:18, paddingVertical: 5}}
-                    />
-                    <Text style={styles[theme].cadastro} onPress={() => navigation.navigate('Cadastro')} >Ainda não é cadastrado? Crie uma conta</Text>
-                </View>
-            </ScrollView>
-            </View>
-        )
-    }
+        <View style={styles[theme].container3}>
+          <Button
+            onPress={handleSubmit(onSubmit)}
+            title="Login"
+            buttonStyle={{
+              backgroundColor: "#190152",
+              borderRadius: 12,
+            }}
+            containerStyle={{
+              width: 339,
+              height: 55,
+              marginLeft: 24,
+              fontSize: 18,
+            }}
+            titleStyle={{ color: "white", fontSize: 18, paddingVertical: 5 }}
+          />
+          <Text style={styles[theme].cadastro} onPress={() => navigation.navigate("Cadastro")}>
+            Ainda não é cadastrado? Crie uma conta
+          </Text>
+        </View>
+      </ScrollView>
+    </View>
+  );
+}
 
 
 const styles = StyleSheet.create({

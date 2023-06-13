@@ -1,67 +1,83 @@
 import React from "react";
-import { View,  Text, StyleSheet, ScrollView } from "react-native";
-import{ Button, Input } from '@rneui/themed';
+import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { Button, Input } from '@rneui/themed';
 import Constants from 'expo-constants';
 import { useForm, Controller } from "react-hook-form";
-import {yupResolver} from "@hookform/resolvers/yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from 'yup';
 import useStore from "../../../assets/themeStore";
 
-
 const schema = yup.object({
-    nome: yup.string().required("Informe seu nome!"),
-    sexo: yup.string().required("Informe seu sexo"),
-    apelido: yup.string().required("Informe seu apelido!"),
-    email: yup.string().required("Informe seu email!").matches(/^\S+@\S+$/i, 'Email inválido!'),
-    senha: yup.string().required("Informe uma senha para acessar futuramente!").min(6, "A senha tem que ter pelo menos 6 dígitos!"),
-    repetirSenha: yup.string().oneOf([yup.ref('senha'), null], 'As senhas não conferem').required('Confirme sua senha'),
+  nome: yup.string().required("Informe seu nome!"),
+  sexo: yup.string().required("Informe seu sexo"),
+  email: yup.string().required("Informe seu email!").matches(/^\S+@\S+$/i, 'Email inválido!'),
+  senha: yup.string().required("Informe uma senha para acessar futuramente!").min(6, "A senha tem que ter pelo menos 6 dígitos!"),
+  repetirSenha: yup.string().oneOf([yup.ref('senha'), null], 'As senhas não conferem').required('Confirme sua senha'),
 })
 
+export default function Cadastro({ navigation }) {
+  const { control, handleSubmit, formState: { errors } } = useForm({
+    resolver: yupResolver(schema)
+  });
 
-
-
-export default function Cadastro ({navigation}){
-
-    const { control, handleSubmit, formState: { errors } } = useForm({
-        resolver: yupResolver(schema)
+  const onSubmit = async (data) => {
+    try {
+      const { nome, sexo,  email, senha, repetirSenha } = data;
+  
+      const user = {
+        name: nome,
+        sexo: sexo,
+        email: email,
+        password: senha,
+        confirmPassword: repetirSenha
+      };
+  
+      const response = await fetch('https://aos-backend-production-0e13.up.railway.app/users', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(user),
       });
   
-    const onSubmit = (data) => {
-        console.log(data);
+      if (response.ok) {
         navigation.reset({
-            index: 0,
-            routes: [{ name: 'Login' }],
+          index: 0,
+          routes: [{ name: 'Login' }],
         });
-    };
+      } else {
+        throw new Error('Erro ao registrar o usuário.');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-    const { theme } = useStore();
+  const { theme } = useStore();
 
-    return(
-        <View style={styles[theme].container}>
-        <ScrollView>  
-
-            <View style={styles[theme].form}>
-
-            
-                <Text style={styles[theme].texto}>NOME</Text>
-                {errors.nome && <Text style={{ color: '#ff0000', marginLeft: 41, marginBottom:30 }}>{errors.nome?.message}</Text>}
-                <Controller
-                    control={control}
-                    name="nome"
-                    render={({ field: { onChange, onBlur, value } }) => (
-                        <Input
-                            style={[
-                                styles[theme].inputForm,
-                                errors.nome && { borderColor: "#ff0000",borderWidth: 2  },
-                            ]}
-                            placeholder="Nome"
-                            placeholderTextColor={"#BBBBBB"}
-                            onBlur={onBlur}
-                            onChangeText={onChange}
-                            value={value}
-                        />
-                    )}
-                />
+  return (
+    <View style={styles[theme].container}>
+      <ScrollView>
+        <View style={styles[theme].form}>
+          <Text style={styles[theme].texto}>NOME</Text>
+          {errors.nome && <Text style={{ color: '#ff0000', marginLeft: 41, marginBottom: 30 }}>{errors.nome?.message}</Text>}
+          <Controller
+            control={control}
+            name="nome"
+            render={({ field: { onChange, onBlur, value } }) => (
+              <Input
+                style={[
+                  styles[theme].inputForm,
+                  errors.nome && { borderColor: "#ff0000", borderWidth: 2 },
+                ]}
+                placeholder="Nome"
+                placeholderTextColor={"#BBBBBB"}
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+              />
+            )}
+          />
                 
 
 
@@ -87,25 +103,7 @@ export default function Cadastro ({navigation}){
 
 
 
-                <Text style={styles[theme].texto}>APELIDO</Text>
-                {errors.apelido && <Text style={{ color: '#ff0000', marginLeft: 41 , marginBottom:30}}>{errors.apelido?.message}</Text>}
-                <Controller
-                    control={control}
-                    name="apelido"
-                    render={({ field: { onChange, onBlur, value } }) => (
-                        <Input
-                            style={[
-                                styles[theme].inputForm,
-                                errors.apelido && { borderColor: "#ff0000",borderWidth: 2   },
-                            ]}
-                            placeholder="Apelido"
-                            onBlur={onBlur}
-                            onChangeText={onChange}
-                            value={value}
-                        />
-                    )}
-                />
-                
+               
 
 
 

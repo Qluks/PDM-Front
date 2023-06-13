@@ -1,5 +1,5 @@
 import useSWR from 'swr';
-import { fetchDados } from './anime';
+import { fetchDados } from './api';
 
 export const useDados = () => {
   const { data, error, mutate } = useSWR('dados', fetchDados);
